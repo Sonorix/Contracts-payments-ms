@@ -25,16 +25,14 @@ public class ContractsController extends HttpServlet {
 
         try (JsonReader reader = Json.createReader(request.getInputStream())) {
             JsonObject data = reader.readObject();
-            UUID idUsuario = UUID.fromString(data.getString("idUsuario"));
             UUID idEvento = UUID.fromString(data.getString("idEvento"));
-            //Recibir el UUID del usuario
             UUID idMusico = UUID.fromString(data.getString("idMusico"));
             BigDecimal pagoTotal = new BigDecimal(data.getJsonNumber("pagoTotal").toString());
-            //Que es eso?
+            //Tiene mejor presicion para hacer calculos.
             String estado = data.containsKey("estado") ? data.getString("estado") : "Pendiente";
 
             ContractsDto contract = new ContractsDto(idEvento, idMusico, pagoTotal, estado);//Añadir dto del usuario
-            new ContractsDao().createContract(contract,idUsuario);
+            new ContractsDao().createContract(contract);
 
             JsonObject json = Json.createObjectBuilder()
                     .add("message", "Contrato creado correctamente")
